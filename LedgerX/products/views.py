@@ -51,7 +51,7 @@ def product_add(request):
         category = request.POST.get('category')
         price = request.POST.get('default_price')
         stock = request.POST.get('stock_quantity')
-
+        img=request.FILES.get('image')
         # Basic validation
         if not name or not price or not stock:
             messages.error(request, 'All required fields must be filled')
@@ -63,7 +63,8 @@ def product_add(request):
             name=name,
             category=category,
             default_price=price,
-            stock_quantity=stock
+            stock_quantity=stock,
+            image=img
         )
 
         messages.success(request, 'Product added successfully')
