@@ -4,6 +4,7 @@ import requests
 import re  # For regex checking
 
 from django.http import HttpResponse
+from django.contrib.auth import get_user_model  # <-- ADD THIS
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
