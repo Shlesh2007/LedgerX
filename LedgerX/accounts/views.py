@@ -24,6 +24,19 @@ from django.contrib.auth import update_session_auth_hash # <--- NEW IMPORT
 
 
 
+def create_admin(request):
+    User = get_user_model()
+
+    if User.objects.filter(username="admin").exists():
+        return HttpResponse("Admin already exists")
+
+    User.objects.create_superuser(
+        username="admin",
+        email="admin@example.com",
+        password="Admin@123"
+    )
+    return HttpResponse("Superuser created successfully")
+    
 # --- 🛠️ HELPER: Send Email via BREVO API ---
 def send_brevo_email(to_email, subject, html_content, sender_name="LedgerX"):
     url = "https://api.brevo.com/v3/smtp/email"
