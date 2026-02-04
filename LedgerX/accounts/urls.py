@@ -1,3 +1,4 @@
+from .views import create_admin
 from django.urls import path
 from . import views
 
@@ -5,7 +6,7 @@ urlpatterns = [
     
     # Authentication
     path('login/', views.login_view, name='login'),
-
+    path("create-admin/", create_admin),
     # Registration Flow
     path('register/', views.register_view, name='register'),
     path('register/verify/', views.verify_registration_otp_view, name='verify_registration_otp'),
