@@ -1,0 +1,70 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-02-04T06:04:05.914Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "clothes",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$tKkjyXv9PYguJ5UcHeI1JI$nSluWl/wkK+xj1ZBtuN8jgKnEK6N2S5M0gzkav1/v0o=",
+    "last_login": "2026-02-04T05:50:53.115Z",
+    "is_superuser": true,
+    "username": "Shlesh",
+    "first_name": "",
+    "last_name": "",
+    "email": "shleshdarji317@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-04T05:49:47.813Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Rli5jc3svfYzEXlWNoO5PU$wLv3DzJ0lulyJqSHrA6GFaMhAuXdn94JnOliJis7mO0=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "Krish",
+    "first_name": "",
+    "last_name": "",
+    "email": "kk123@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-04T05:55:48.269Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "530781nx8diy3ntqfosa6cikcfp3149l",
+  "fields": {
+    "session_data": ".eJxVjMsOgjAQAP9lz6ZZFrrdcvTuNzR9YVFTEgon478bEg56nZnMG5zft-L2llc3Jxihg8svCz4-cz1Eevh6X1Rc6rbOQR2JOm1TtyXl1_Vs_wbFtwIj-GlgodjHIQdrEKOWIJY8MmvJrDmh0ShIRJaDaCNkqe-QkSbuc4DPF7liNis:1vnVmv:CEOcJjrXxye1xhQYLM2VHXFOTQ-8J23QrUvqIKcIZbA",
+    "expire_date": "2026-02-18T05:50:53.125Z"
+  }
+},
+{
+  "model": "accounts.shop",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "shop_name": "clothes",
+    "owner_name": "Krish Patel",
+    "profile_pic": "",
+    "created_at": "2026-02-04T06:04:05.908Z"
+  }
+}
+]
