@@ -178,4 +178,36 @@ def export_inventory_csv(request):
         ])
 
     return response
+# products/views.py
 
+from django.http import HttpResponse
+import csv
+
+@login_required
+def export_out_of_stock_csv(request):
+    shop = request.user.shop
+    # Filter for active products belonging to the shop with 0 stock
+    products = Product.objects.filter(
+        shop=shop, 
+        is_active=True, 
+        stock_quantity=0
+    ).order_by('name')
+
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="out_of_stock_inventory.csv"'
+
+    # Add the UTF-8 BOM to ensure symbols like "₹" display correctly in Excel
+    response.write(u'\ufeff'.encode('utf8'))
+
+    writer = csv.writer(response)
+    writer.writerow(['Product Name', 'Category', 'Price (₹)', 'Stock Quantity'])
+
+    for product in products:
+        writer.writerow([
+            product.name,
+            product.category or 'General',
+            product.default_price,
+            product.stock_quantity
+        ])
+
+    return response
