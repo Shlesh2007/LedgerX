@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import Shop
-
+from cloudinary.models import CloudinaryField
 class Product(models.Model):
     """
     Product available in a specific shop.
