@@ -4,7 +4,7 @@ import cloudinary.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0002_product_image.py'),
+        ('products', '0002_product_image'),
     ]
 
     operations = [
