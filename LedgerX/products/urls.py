@@ -8,8 +8,6 @@ urlpatterns = [
     path('<int:product_id>/', views.product_detail, name='product_detail'),
     path('<int:product_id>/edit/', views.product_edit, name='product_edit'),
     path('<int:product_id>/deactivate/', views.product_deactivate, name='product_deactivate'),
-
-
     path('export/', views.export_inventory_csv, name='export_inventory_csv'),
-
+    path('export-out-of-stock/', views.export_out_of_stock_csv, name='export_out_of_stock_csv'),
 ]
