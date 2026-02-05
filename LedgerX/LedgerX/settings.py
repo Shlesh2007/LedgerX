@@ -13,6 +13,7 @@ import os
 import cloudinary
 from pathlib import Path
 from dotenv import load_dotenv
+load_dotenv(BASE_DIR / ".env")
 
 cloudinary.config(
     cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -20,7 +21,7 @@ cloudinary.config(
     api_secret = os.environ.get("CLOUDINARY_API_SECRET"),
     secure = True
 )
-
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # from dotenv import load_dotenv
 from pathlib import Path
 import os
