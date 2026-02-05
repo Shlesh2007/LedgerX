@@ -28,10 +28,10 @@ class Product(models.Model):
     # Soft delete
     is_active = models.BooleanField(default=True)
 
-    image = models.ImageField(
-        upload_to='products/',
-        null=True,
-        blank=True
+    image = CloudinaryField(
+        'product_image',
+        blank=True,
+        null=True
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
