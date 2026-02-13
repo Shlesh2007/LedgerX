@@ -17,41 +17,66 @@ def product_restock(request):
     products = Product.objects.filter(shop=shop, is_active=True).order_by('name')
     return render(request, 'products/product_restock.html', {'products': products})
 
-@login_required
+import csv
+import re
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib import messages
+
 def export_restock_csv(request):
     """
-    Generates a CSV with Shop Details in Row 1, followed by the Restock Plan.
+    Generates a CSV with Shop Details in Row 1,
+    followed by the Restock Plan.
+    The exported file name will be the Shop Name.
     """
     if request.method == "POST":
         shop = request.user.shop
-        products = Product.objects.filter(shop=shop, is_active=True).order_by('name')
+        products = Product.objects.filter(
+            shop=shop, 
+            is_active=True
+        ).order_by('name')
 
+        # 🟢 Create HTTP response
         response = HttpResponse(content_type='text/csv; charset=utf-8')
-        response['Content-Disposition'] = 'attachment; filename="restock_plan.csv"'
-        response.write(u'\ufeff'.encode('utf8')) # Fix for Excel symbols
+
+        # 🟢 Clean shop name for safe filename
+        shop_name_clean = re.sub(r'[^A-Za-z0-9_\- ]', '', shop.shop_name).strip()
+        shop_name_clean = shop_name_clean.replace(" ", "_")
+
+        filename = f"{shop_name_clean}_restock_plan.csv"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        # 🟢 Fix Excel UTF-8 encoding issue
+        response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
 
-        # 🟢 ROW 1: Shop Metadata (Owner, Shop Name, Email)
-        # We fetch email from the User model attached to the shop
+        # 🟢 Row 1: Shop Metadata
         writer.writerow([
-            shop.owner_name,      # Value 1
-            shop.shop_name,       # Value 2
-            request.user.email    # Value 3
+            shop.owner_name,
+            shop.shop_name,
+            request.user.email
         ])
 
-        # 🟢 ROW 2: Column Headers (The 5 Columns)
-        writer.writerow(['Product Name', 'Category', 'Price', 'Current Stock', 'Restock Quantity'])
+        # 🟢 Row 2: Column Headers
+        writer.writerow([
+            'Product Name',
+            'Category',
+            'Price',
+            'Current Stock',
+            'Restock Quantity'
+        ])
 
         has_data = False
+
         for product in products:
             qty_str = request.POST.get(f'restock_{product.id}', '0')
-            
+
             try:
                 qty = int(qty_str)
             except ValueError:
                 qty = 0
-            
+
             if qty > 0:
                 writer.writerow([
                     product.name,
@@ -61,13 +86,13 @@ def export_restock_csv(request):
                     qty
                 ])
                 has_data = True
-        
+
         if not has_data:
             messages.warning(request, "No products selected for restock.")
             return redirect('product_restock')
 
         return response
-    
+
     return redirect('product_restock')
 # Create your views here.
 @login_required
