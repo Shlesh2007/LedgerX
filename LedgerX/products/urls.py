@@ -10,4 +10,6 @@ urlpatterns = [
     path('<int:product_id>/deactivate/', views.product_deactivate, name='product_deactivate'),
     path('export/', views.export_inventory_csv, name='export_inventory_csv'),
     path('export-out-of-stock/', views.export_out_of_stock_csv, name='export_out_of_stock_csv'),
+     path('restock/', views.product_restock, name='product_restock'),
+    path('restock/export/', views.export_restock_csv, name='export_restock_csv'),
 ]
