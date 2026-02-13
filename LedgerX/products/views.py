@@ -20,8 +20,7 @@ def product_restock(request):
 @login_required
 def export_restock_csv(request):
     """
-    Generates a CSV based on the quantities submitted in the Restock form.
-    Only includes items where Restock Quantity > 0.
+    Generates a CSV with Shop Details in Row 1, followed by the Restock Plan.
     """
     if request.method == "POST":
         shop = request.user.shop
@@ -29,15 +28,23 @@ def export_restock_csv(request):
 
         response = HttpResponse(content_type='text/csv; charset=utf-8')
         response['Content-Disposition'] = 'attachment; filename="restock_plan.csv"'
-        response.write(u'\ufeff'.encode('utf8')) # Fix currency symbols in Excel
+        response.write(u'\ufeff'.encode('utf8')) # Fix for Excel symbols
 
         writer = csv.writer(response)
-        # 🟢 The 5 Columns you requested
+
+        # 🟢 ROW 1: Shop Metadata (Owner, Shop Name, Email)
+        # We fetch email from the User model attached to the shop
+        writer.writerow([
+            shop.owner_name,      # Value 1
+            shop.shop_name,       # Value 2
+            request.user.email    # Value 3
+        ])
+
+        # 🟢 ROW 2: Column Headers (The 5 Columns)
         writer.writerow(['Product Name', 'Category', 'Price', 'Current Stock', 'Restock Quantity'])
 
         has_data = False
         for product in products:
-            # Get the input value named 'restock_ID'
             qty_str = request.POST.get(f'restock_{product.id}', '0')
             
             try:
@@ -45,7 +52,6 @@ def export_restock_csv(request):
             except ValueError:
                 qty = 0
             
-            # 🟢 Only export rows where the shopkeeper actually wants stock
             if qty > 0:
                 writer.writerow([
                     product.name,
@@ -57,7 +63,7 @@ def export_restock_csv(request):
                 has_data = True
         
         if not has_data:
-            messages.warning(request, "No products selected for restock (Quantities were all 0).")
+            messages.warning(request, "No products selected for restock.")
             return redirect('product_restock')
 
         return response
