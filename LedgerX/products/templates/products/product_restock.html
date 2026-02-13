@@ -1,0 +1,94 @@
+{% extends 'base_public.html' %}
+{% block title %}Restock Plan | LedgerX{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <form method="POST" action="{% url 'export_restock_csv' %}">
+        {% csrf_token %}
+        
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 animate__animated animate__fadeIn">
+            <div>
+                <h2 class="fw-bold mb-0">Restock Planner</h2>
+                <p class="text-muted small mb-0">Enter quantities for items you want to buy.</p>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <a href="{% url 'product_list' %}" class="btn btn-outline-secondary rounded-pill px-3">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-success shadow-sm rounded-pill px-4 fw-bold">
+                    📥 Download Order CSV
+                </button>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4 p-2 animate__animated animate__fadeInUp">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-0 ps-3">🔍</span>
+                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search to find products..." autocomplete="off">
+            </div>
+        </div>
+
+        <div style="min-height: 400px;">
+            <div class="row g-3 g-lg-4" id="productGrid">
+                {% for product in products %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item animate__animated animate__fadeInUp">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-3 pb-0">
+                            <h6 class="fw-bold text-dark mb-1 text-truncate search-name">{{ product.name }}</h6>
+                            <small class="text-muted search-category">{{ product.category|default:"General" }}</small>
+                            <div class="d-flex justify-content-between mt-2">
+                                <span class="badge bg-light text-dark border">Current: {{ product.stock_quantity }}</span>
+                                <span class="text-emerald fw-bold">₹{{ product.default_price }}</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light mt-3 border-top">
+                            <label class="small fw-bold text-muted mb-1">Restock Quantity:</label>
+                            <input 
+                                type="number" 
+                                name="restock_{{ product.id }}" 
+                                class="form-control border-0 shadow-sm text-center fw-bold text-primary" 
+                                placeholder="0" 
+                                min="0"
+                                onfocus="this.select()"
+                            >
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h4 class="fw-bold text-muted">No products found</h4>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    const gridItems = Array.from(document.querySelectorAll(".product-item"));
+
+    searchInput.addEventListener("input", function() {
+        const query = this.value.toLowerCase().trim();
+        gridItems.forEach(item => {
+            const name = item.querySelector(".search-name").innerText.toLowerCase();
+            const category = item.querySelector(".search-category").innerText.toLowerCase();
+            if(name.includes(query) || category.includes(query)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+});
+</script>
+
+<style>
+    .text-emerald { color: #10b981; }
+    input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+</style>
+{% endblock %}
